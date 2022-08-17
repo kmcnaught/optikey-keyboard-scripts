@@ -7,14 +7,14 @@ def safe_ascii(text):
 	return re.sub(r'[\\/:"*?<>|]+', "", text)
 
 def remove_empty_lines(text):
-	return os.linesep.join([s for s in text.splitlines() if s.strip()])
+	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
 
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
     rough_string = ET.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)    
-    return remove_empty_lines(reparsed.toprettyxml(indent="\t"))
+    return reparsed.toprettyxml(indent="\t")
 
 def add_key(content_node, row, col, width, height, text):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -34,7 +34,10 @@ def add_key(content_node, row, col, width, height, text):
 def save_file(xml_root, filename):
 	text = prettify(xml_root)
 	with open(filename, "w") as f:
-		f.write(text)
+		for line in text.splitlines():
+			if (line.strip()):
+				f.write(line)
+				f.write("\n")
 
 def setup_keyboard(hidden=True):
 	# Load basic content
@@ -59,8 +62,15 @@ def setup_keyboard(hidden=True):
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
 
-	# Add keys one by one
-	curr_row = 0 # use enumerate for less verbose indexing
+
+	# suggestions_element = ET.fromstring("<SuggestionRow Width=\"" + str(total_cols) +"\"/>")
+	# scratchpad_element = ET.fromstring("<Scratchpad Width=\"" + str(total_cols) +"\"/>")		
+
+	# content.insert(0, suggestions_element)
+	# content.insert(1, scratchpad_element)
+
+	# Add keys one by one, starting on third row (below scratchpad and suggestions)
+	curr_row = 2 # use enumerate for less verbose indexing
 	curr_col = 0
 	for char in all_chars:		
 		add_key(content, curr_row, curr_col, 1, 1, char)
@@ -71,7 +81,7 @@ def make_text_keyboard(all_chars):
 
 	save_file(tree.getroot(), safe_ascii("z__sub-" + all_chars+ ".xml"))
 
-total_rows = 2
+total_rows = 4
 total_cols = 4 
 
 # Content node contains all the keys
