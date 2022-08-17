@@ -1,6 +1,10 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 import os
+import re
+
+def safe_ascii(text):
+	return re.sub(r'[\\/:"*?<>|]+', "", text)
 
 def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.strip()])
@@ -28,11 +32,11 @@ def add_key(content_node, row, col, width, height, text):
 	text_elem.text = text
 
 def save_file(xml_root, filename):
-	text = prettify(root)
+	text = prettify(xml_root)
 	with open(filename, "w") as f:
 		f.write(text)
 
-def setup_keyboard():
+def setup_keyboard(hidden=True):
 	# Load basic content
 	tree = ET.parse('skeleton.xml')
 	root = tree.getroot()
@@ -40,6 +44,7 @@ def setup_keyboard():
 	# Top level elements
 	rows_element = ET.fromstring("<Rows>" + str(total_rows) + "</Rows>")
 	cols_element = ET.fromstring("<Cols>" + str(total_cols) + "</Cols>")
+	hidden_element = ET.fromstring("<HideFromKeyboardMenu>" + str(hidden) + "</HideFromKeyboardMenu>")
 
 	# insert at top
 	grid = tree.find('Grid')
@@ -49,19 +54,30 @@ def setup_keyboard():
 	# Content node contains all the keys
 	content = tree.find('Content')
 
-	return content
+	return tree, content
 
-# def make_text_keyboard():
+def make_text_keyboard(all_chars):
+	tree, content = setup_keyboard()
 
+	# Add keys one by one
+	curr_row = 0 # use enumerate for less verbose indexing
+	curr_col = 0
+	for char in all_chars:		
+		add_key(content, curr_row, curr_col, 1, 1, char)
+		curr_col += 1
+		if curr_col >= total_cols:
+			curr_col = 0
+			curr_row += 1
+
+	save_file(tree.getroot(), safe_ascii("z__sub-" + all_chars+ ".xml"))
 
 total_rows = 2
 total_cols = 4 
 
-
 # Content node contains all the keys
-content = setup_keyboard()
+tree, content = setup_keyboard()
 
-keys = ["abcd\nefgh", "ijkl\nmnop", "qrst\nuvwx", "yz?!,;.",]
+keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.",] #todo: split with newline for label
 # TODO special char ␣ will need special consideration
 
 # Add keys one by one
@@ -69,6 +85,7 @@ keys = ["abcd\nefgh", "ijkl\nmnop", "qrst\nuvwx", "yz?!,;.",]
 curr_row = 0
 curr_col = 0
 for key in keys:
+	make_text_keyboard(key)
 	add_key(content, curr_row, curr_col, 1, 1, key)
 	curr_col += 1
 	if curr_col >= total_cols:
@@ -78,4 +95,4 @@ for key in keys:
 #TODO: think about how we keep track of links vs text, text vs actions
 
 
-save_file(root, "wibble.xml")
+save_file(tree.getroot(), "wibble.xml")
