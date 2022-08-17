@@ -81,6 +81,7 @@ def setup_keyboard(hidden=True):
 	grid = tree.find('Grid')
 	grid.insert(0, rows_element)
 	grid.insert(1, cols_element)
+	grid.insert(2, hidden_element)
 
 	# Content node contains all the keys
 	content = tree.find('Content')
@@ -121,7 +122,8 @@ total_cols = 4
 # Content node contains all the keys
 tree, content = setup_keyboard(False)
 
-keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.",] #todo: split with newline for label
+keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;."]
+
 # TODO special char ␣ will need special consideration
 
 # Add keys to top level one by one
