@@ -1,3 +1,6 @@
+#!/bin/python
+# -*- coding: utf-8 -*-
+
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 import os
@@ -10,11 +13,11 @@ def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
 
 def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = ET.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)    
-    return reparsed.toprettyxml(indent="\t")
+	"""Return a pretty-printed XML string for the Element.
+	"""
+	rough_string = ET.tostring(elem, 'utf-8')
+	reparsed = minidom.parseString(rough_string)
+	return reparsed.toprettyxml(indent="\t")
 
 def add_textkey(content_node, row, col, width, height, text):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -32,7 +35,6 @@ def add_textkey(content_node, row, col, width, height, text):
 	text_elem.text = text
 	action_elem = ET.SubElement(key, "Action")
 	action_elem.text = "BackFromKeyboard"
-
 
 def add_linkkey(content_node, row, col, width, height, text, link):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -91,7 +93,6 @@ def setup_keyboard(hidden=True):
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
 
-
 	# these are now in the skeleton
 
 	# suggestions_element = ET.fromstring("<SuggestionRow Width=\"" + str(total_cols) +"\"/>")
@@ -114,10 +115,8 @@ def make_text_keyboard(all_chars):
 	save_file(tree.getroot(), fname)
 	return fname
 
-
-
 total_rows = 4
-total_cols = 4 
+total_cols = 4
 
 # Content node contains all the keys
 tree, content = setup_keyboard(False)
@@ -138,7 +137,5 @@ for key in keys:
 		curr_col = 0
 		curr_row += 1
 
-#TODO: think about how we keep track of links vs text, text vs actions
-
-
+# TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
