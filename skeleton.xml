@@ -8,6 +8,7 @@
       <SuggestionRow Width="4"/>
       <DynamicKey>
         <Label>Clear</Label>
+        <Symbol>ClearIcon</Symbol>
         <Action>ClearScratchpad</Action>
       </DynamicKey>
       <Scratchpad Width="2"/>
