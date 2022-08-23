@@ -1,22 +1,20 @@
 <Keyboard>
   <WindowState>Maximised</WindowState>
   <BackgroundColor>Black</BackgroundColor>
-    
     <Grid>
-        
+      <!-- TO GENERATE -->
     </Grid>
-
-    <Content>        
+    <Content>
       <SuggestionRow Width="4"/>
-
       <DynamicKey>
         <Label>Clear</Label>
         <Action>ClearScratchpad</Action>
       </DynamicKey>
-      
       <Scratchpad Width="2"/>
-
-      <DynamicKey><Action>Speak</Action><Label>Speak</Label><Symbol>SpeakIcon</Symbol></DynamicKey>
-
+      <DynamicKey>
+        <Action>Speak</Action>
+        <Label>Speak</Label>
+        <Symbol>SpeakIcon</Symbol>
+      </DynamicKey>
     </Content>
 </Keyboard>

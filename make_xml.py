@@ -94,15 +94,11 @@ def setup_keyboard(hidden=True):
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
 
-	# these are now in the skeleton
+	# See at the skeleton.xml the initial couple keyboard's lines:
+	# SuggestionRow and Scratchpad related.
+	#
+	# So here we add keys one by one starting on third row...
 
-	# suggestions_element = ET.fromstring("<SuggestionRow Width=\"" + str(total_cols) +"\"/>")
-	# scratchpad_element = ET.fromstring("<Scratchpad Width=\"" + str(total_cols) +"\"/>")		
-
-	# content.insert(0, suggestions_element)
-	# content.insert(1, scratchpad_element)
-
-	# Add keys one by one, starting on third row (below scratchpad and suggestions)
 	curr_row = 2 # use enumerate for less verbose indexing
 	curr_col = 0
 	for char in all_chars:		
