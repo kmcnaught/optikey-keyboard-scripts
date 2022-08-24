@@ -69,7 +69,7 @@ def save_file(xml_root, filename):
 				f.write(line)
 				f.write("\n")
 
-def setup_keyboard(hidden=True):
+def setup_keyboard(name=None,hidden=True):
 	# Load basic content
 	tree = ET.parse('skeleton.xml')
 	root = tree.getroot()
@@ -79,7 +79,11 @@ def setup_keyboard(hidden=True):
 	cols_element = ET.fromstring("<Cols>" + str(total_cols) + "</Cols>")
 	hidden_element = ET.fromstring("<HideFromKeyboardMenu>" + str(hidden) + "</HideFromKeyboardMenu>")
 
-	root.insert(2, hidden_element)  # 2 means it being the third tag
+	root.insert(2, hidden_element)  # 2 means it being the third tag (in this moment)
+
+	if name:
+		name_element = ET.fromstring("<Name>" + str(name) + "</Name>")
+		root.insert(0, name_element) # so hidden_element will be the forth tag
 
 	# insert at top
 	grid = tree.find('Grid')
@@ -94,33 +98,29 @@ def setup_keyboard(hidden=True):
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
 
-	# these are now in the skeleton
+	# See at the skeleton.xml the initial couple keyboard's lines:
+	# SuggestionRow and Scratchpad related.
+	#
+	# So here we add keys one by one starting on third row...
 
-	# suggestions_element = ET.fromstring("<SuggestionRow Width=\"" + str(total_cols) +"\"/>")
-	# scratchpad_element = ET.fromstring("<Scratchpad Width=\"" + str(total_cols) +"\"/>")		
-
-	# content.insert(0, suggestions_element)
-	# content.insert(1, scratchpad_element)
-
-	# Add keys one by one, starting on third row (below scratchpad and suggestions)
 	curr_row = 2 # use enumerate for less verbose indexing
 	curr_col = 0
 	for char in all_chars:		
-		add_textkey(content, curr_row, curr_col, 1, 1, char)
+		add_textkey(content, curr_row, curr_col, 1, 2, char)
 		curr_col += 1
 		if curr_col >= total_cols:
 			curr_col = 0
-			curr_row += 1
+			curr_row += 2 # the typing lines are Height=2
 
 	fname = safe_ascii("z__sub-" + all_chars+ ".xml")
 	save_file(tree.getroot(), fname)
 	return fname
 
-total_rows = 4
+total_rows = 6
 total_cols = 4
 
 # Content node contains all the keys
-tree, content = setup_keyboard(False)
+tree, content = setup_keyboard("SL 2.0", False)
 
 keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;."]
 
@@ -132,11 +132,11 @@ curr_row = 2
 curr_col = 0
 for key in keys:
 	link = make_text_keyboard(key)
-	add_linkkey(content, curr_row, curr_col, 1, 1, key, link)
+	add_linkkey(content, curr_row, curr_col, 1, 2, key, link)
 	curr_col += 1
 	if curr_col >= total_cols:
 		curr_col = 0
-		curr_row += 1
+		curr_row += 2 # the typing lines are Height=2
 
 # TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
