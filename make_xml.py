@@ -69,7 +69,7 @@ def save_file(xml_root, filename):
 				f.write(line)
 				f.write("\n")
 
-def setup_keyboard(hidden=True):
+def setup_keyboard(name=None,hidden=True):
 	# Load basic content
 	tree = ET.parse('skeleton.xml')
 	root = tree.getroot()
@@ -79,7 +79,11 @@ def setup_keyboard(hidden=True):
 	cols_element = ET.fromstring("<Cols>" + str(total_cols) + "</Cols>")
 	hidden_element = ET.fromstring("<HideFromKeyboardMenu>" + str(hidden) + "</HideFromKeyboardMenu>")
 
-	root.insert(2, hidden_element)  # 2 means it being the third tag
+	root.insert(2, hidden_element)  # 2 means it being the third tag (in this moment)
+
+	if name:
+		name_element = ET.fromstring("<Name>" + str(name) + "</Name>")
+		root.insert(0, name_element) # so hidden_element will be the forth tag
 
 	# insert at top
 	grid = tree.find('Grid')
@@ -116,7 +120,7 @@ total_rows = 6
 total_cols = 4
 
 # Content node contains all the keys
-tree, content = setup_keyboard(False)
+tree, content = setup_keyboard("SL 2.0", False)
 
 keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;."]
 
