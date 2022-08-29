@@ -10,7 +10,7 @@ from more_itertools import chunked
 from more_itertools import flatten
 
 def safe_ascii(text):
-	return re.sub(r'[\\/\×÷ç:"\'*?<>|]+', "", text)
+	return re.sub(r'[\\/\×÷ç:"\'*?<>|␣]+', "", text)
 
 def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
@@ -20,7 +20,7 @@ def prettify(elem):
 	"""
 	rough_string = ET.tostring(elem, 'utf-8')
 	reparsed = minidom.parseString(rough_string)
-	return reparsed.toprettyxml(indent="\t")
+	return reparsed.toprettyxml(indent="\t").replace("&amp;&amp;","&")
 
 def add_deadbutton(content_node, row, col, width, height):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -45,6 +45,8 @@ def add_textkey(content_node, row, col, width, height, text):
 	label_elem.text = text
 	text_elem = ET.SubElement(key, "Text")
 	text_elem.text = text
+	if text == '␣':
+		text_elem.text = '&&#32;'
 	action_elem = ET.SubElement(key, "Action")
 	action_elem.text = "BackFromKeyboard"
 
@@ -144,10 +146,8 @@ tree, content = setup_keyboard("SL 2.0", False)
 
 keys = [
 	"abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.\"",
-	"()-+×÷=~", "01234567", "89ç\'\/[]", "@$&%<>"
+	"()-+×÷=~", "01234567", "89ç[\/']", "@$&%<>␣"
 ]
-
-# TODO special char ␣ will need special consideration
 
 # Add keys to top level one by one
 curr_row = 6 # starts after SuggestionRow and Scratchpad lines
