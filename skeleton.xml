@@ -10,23 +10,41 @@
       <DynamicKey Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey Width="4" Height="3">
-        <Label>Clear</Label>
-        <Symbol>ClearIcon</Symbol>
-        <Action>ClearScratchpad</Action>
+        <Action>BackOne</Action>
+        <Symbol>BackOneIcon</Symbol>>
       </DynamicKey>
       <Scratchpad Width="12" Height="3"/>
       <DynamicKey Width="4" Height="3">
+        <Label>Falar</Label>
         <Action>Speak</Action>
-        <Label>Speak</Label>
         <Symbol>SpeakIcon</Symbol>
       </DynamicKey>
       <DynamicKey Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey Width="5" Height="4"/> <!-- dead button -->
-      <DynamicKey Width="4" Height="4"/> <!-- 1 -->
-      <DynamicKey Width="4" Height="4"/> <!-- 2 -->
-      <DynamicKey Width="4" Height="4"/> <!-- 3 -->
-      <DynamicKey Width="4" Height="4"/> <!-- 4 -->
-      <DynamicKey Width="4" Height="4"/> <!-- 5 -->
+      <DynamicKey Width="4" Height="4"> <!-- 1 -->
+        <Action>BackMany</Action>
+	    <Symbol>BackManyIcon</Symbol>
+      </DynamicKey>
+      <DynamicKey Width="4" Height="4"> <!-- 2 -->
+	    <Label>Limpar</Label>
+        <Symbol>ClearIcon</Symbol>
+        <Action>ClearScratchpad</Action>
+      </DynamicKey>
+      <DynamicKey Width="4" Height="4"> <!-- 3 -->
+        <Label>Calibrar</Label>
+        <Symbol>CalibrateIcon</Symbol>
+        <Action>Calibrate</Action>
+      </DynamicKey>
+      <DynamicKey Width="4" Height="4"> <!-- 4 -->
+        <Label>Dormir</Label>
+        <Symbol>SleepIcon</Symbol>
+        <Action>Sleep</Action>
+      </DynamicKey>
+      <DynamicKey Width="4" Height="4"> <!-- 5 -->
+        <Label>Atenção!</Label>
+        <Symbol>AlarmIcon</Symbol>
+        <Action>Attention</Action>
+      </DynamicKey>
       <DynamicKey Width="5" Height="4"/> <!-- dead button -->
     </Content>
 </Keyboard>
