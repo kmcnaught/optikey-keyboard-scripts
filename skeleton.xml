@@ -5,17 +5,28 @@
       <!-- TO GENERATE -->
     </Grid>
     <Content>
-      <SuggestionRow Width="4" Height="4"/>
-      <DynamicKey Height="4">
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <SuggestionRow Width="20" Height="4"/>
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey Width="4" Height="4">
         <Label>Clear</Label>
         <Symbol>ClearIcon</Symbol>
         <Action>ClearScratchpad</Action>
       </DynamicKey>
-      <Scratchpad Width="2" Height="4"/>
-      <DynamicKey Height="4">
+      <Scratchpad Width="12" Height="4"/>
+      <DynamicKey Width="4" Height="4">
         <Action>Speak</Action>
         <Label>Speak</Label>
         <Symbol>SpeakIcon</Symbol>
       </DynamicKey>
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey Width="4" Height="4"/> <!-- 1 -->
+      <DynamicKey Width="4" Height="4"/> <!-- 2 -->
+      <DynamicKey Width="4" Height="4"/> <!-- 3 -->
+      <DynamicKey Width="4" Height="4"/> <!-- 4 -->
+      <DynamicKey Width="4" Height="4"/> <!-- 5 -->
+      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
     </Content>
 </Keyboard>

@@ -6,6 +6,9 @@ import xml.dom.minidom as minidom
 import os
 import re
 
+from more_itertools import chunked
+from more_itertools import flatten
+
 def safe_ascii(text):
 	return re.sub(r'[\\/\×÷ç:"\'*?<>|]+', "", text)
 
@@ -18,6 +21,15 @@ def prettify(elem):
 	rough_string = ET.tostring(elem, 'utf-8')
 	reparsed = minidom.parseString(rough_string)
 	return reparsed.toprettyxml(indent="\t")
+
+def add_deadbutton(content_node, row, col, width, height):
+	key = ET.SubElement(content_node,"DynamicKey")
+
+	# Attributes
+	key.set('Row', str(row))
+	key.set('Col', str(col))
+	key.set('Width', str(width))
+	key.set('Height', str(height))
 
 def add_textkey(content_node, row, col, width, height, text):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -104,20 +116,28 @@ def make_text_keyboard(all_chars):
 	# So here we add keys one by one starting on third row...
 
 	curr_row = 8 # starts after SuggestionRow and Scratchpad lines
-	curr_col = 0
-	for char in all_chars:		
-		add_textkey(content, curr_row, curr_col, 1, 4, char)
-		curr_col += 1
-		if curr_col >= total_cols:
-			curr_col = 0
-			curr_row += 4 # each keyboard's line is Height=4
 
-	fname = safe_ascii("z__sub-" + all_chars+ ".xml")
+	all_chars = list(chunked(all_chars, 4))
+	for chunk in all_chars:
+		curr_col = 5 # starts after button of no tracking at side
+		add_deadbutton(content, curr_row, 0, 5, 4)
+		for char in chunk:
+			add_textkey(content, curr_row, curr_col, 5, 4, char)
+			curr_col += 5 # each "typing" key is Width=5
+		add_deadbutton(content, curr_row, curr_col, 5, 4)
+		curr_row += 4 # each keyboard's line is Height=4
+
+	all_chars = ''.join(list(flatten(all_chars)))
+	fname = safe_ascii("z__sub-" + all_chars + ".xml")
 	save_file(tree.getroot(), fname)
 	return fname
 
 total_rows = 20 # five keyboard's lines with four rows of grid each
-total_cols = 4
+total_cols = 30 #                 | SuggestionRow
+                # 5 + 4 12  4 + 5 | scratchpad's line
+                # 5 + 5+5+5+5 + 5 | typing line one
+                # 5 + 5+5+5+5 + 5 | typing line two
+                # 5 +  4[x5]  + 5 | utility line
 
 # Content node contains all the keys
 tree, content = setup_keyboard("SL 2.0", False)
@@ -130,16 +150,18 @@ keys = [
 # TODO special char ␣ will need special consideration
 
 # Add keys to top level one by one
-
 curr_row = 8 # starts after SuggestionRow and Scratchpad lines
-curr_col = 0
-for key in keys:
-	link = make_text_keyboard(key)
-	add_linkkey(content, curr_row, curr_col, 1, 4, key, link)
-	curr_col += 1
-	if curr_col >= total_cols:
-		curr_col = 0
-		curr_row += 4 # each keyboard's line is Height=4
+
+keys = list(chunked(keys, 4))
+for chunk in keys:
+	curr_col = 5 # starts after button of no tracking at side
+	add_deadbutton(content, curr_row, 0, 5, 4)
+	for key in chunk:
+		link = make_text_keyboard(key)
+		add_linkkey(content, curr_row, curr_col, 5, 4, key, link)
+		curr_col += 5 # each "typing" key is Width=5
+	add_deadbutton(content, curr_row, curr_col, 5, 4)
+	curr_row += 4 # each keyboard's line is Height=4
 
 # TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
