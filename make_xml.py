@@ -115,17 +115,17 @@ def make_text_keyboard(all_chars):
 	#
 	# So here we add keys one by one starting on third row...
 
-	curr_row = 8 # starts after SuggestionRow and Scratchpad lines
+	curr_row = 6 # starts after SuggestionRow and Scratchpad lines
 
 	all_chars = list(chunked(all_chars, 4))
 	for chunk in all_chars:
 		curr_col = 5 # starts after button of no tracking at side
-		add_deadbutton(content, curr_row, 0, 5, 4)
+		add_deadbutton(content, curr_row, 0, 5, 5)
 		for char in chunk:
-			add_textkey(content, curr_row, curr_col, 5, 4, char)
+			add_textkey(content, curr_row, curr_col, 5, 5, char)
 			curr_col += 5 # each "typing" key is Width=5
-		add_deadbutton(content, curr_row, curr_col, 5, 4)
-		curr_row += 4 # each keyboard's line is Height=4
+		add_deadbutton(content, curr_row, curr_col, 5, 5)
+		curr_row += 5 # each keyboard's line is Height=5
 
 	all_chars = ''.join(list(flatten(all_chars)))
 	fname = safe_ascii("z__sub-" + all_chars + ".xml")
@@ -150,18 +150,18 @@ keys = [
 # TODO special char ␣ will need special consideration
 
 # Add keys to top level one by one
-curr_row = 8 # starts after SuggestionRow and Scratchpad lines
+curr_row = 6 # starts after SuggestionRow and Scratchpad lines
 
 keys = list(chunked(keys, 4))
 for chunk in keys:
 	curr_col = 5 # starts after button of no tracking at side
-	add_deadbutton(content, curr_row, 0, 5, 4)
+	add_deadbutton(content, curr_row, 0, 5, 5)
 	for key in chunk:
 		link = make_text_keyboard(key)
-		add_linkkey(content, curr_row, curr_col, 5, 4, key, link)
+		add_linkkey(content, curr_row, curr_col, 5, 5, key, link)
 		curr_col += 5 # each "typing" key is Width=5
-	add_deadbutton(content, curr_row, curr_col, 5, 4)
-	curr_row += 4 # each keyboard's line is Height=4
+	add_deadbutton(content, curr_row, curr_col, 5, 5)
+	curr_row += 5 # each keyboard's line is Height=5
 
 # TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
