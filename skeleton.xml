@@ -5,14 +5,14 @@
       <!-- TO GENERATE -->
     </Grid>
     <Content>
-      <SuggestionRow Width="4"/>
-      <DynamicKey>
+      <SuggestionRow Width="4" Height="4"/>
+      <DynamicKey Height="4">
         <Label>Clear</Label>
         <Symbol>ClearIcon</Symbol>
         <Action>ClearScratchpad</Action>
       </DynamicKey>
-      <Scratchpad Width="2"/>
-      <DynamicKey>
+      <Scratchpad Width="2" Height="4"/>
+      <DynamicKey Height="4">
         <Action>Speak</Action>
         <Label>Speak</Label>
         <Symbol>SpeakIcon</Symbol>
