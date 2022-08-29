@@ -7,7 +7,7 @@ import os
 import re
 
 def safe_ascii(text):
-	return re.sub(r'[\\/:"*?<>|]+', "", text)
+	return re.sub(r'[\\/\×÷ç:"\'*?<>|]+', "", text)
 
 def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
@@ -122,7 +122,10 @@ total_cols = 4
 # Content node contains all the keys
 tree, content = setup_keyboard("SL 2.0", False)
 
-keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;."]
+keys = [
+	"abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.\"",
+	"()-+×÷=~", "01234567", "89ç\'\/[]", "@$&%<>"
+]
 
 # TODO special char ␣ will need special consideration
 
