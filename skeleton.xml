@@ -5,10 +5,10 @@
       <!-- TO GENERATE -->
     </Grid>
     <Content>
-      <DynamicKey Width="5" Height="3"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
       <SuggestionRow Width="20" Height="3"/>
-      <DynamicKey Width="5" Height="3"/> <!-- dead button -->
-      <DynamicKey Width="5" Height="3"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey Width="4" Height="3">
         <Action>BackOne</Action>
         <Symbol>BackOneIcon</Symbol>>
@@ -19,8 +19,8 @@
         <Action>Speak</Action>
         <Symbol>SpeakIcon</Symbol>
       </DynamicKey>
-      <DynamicKey Width="5" Height="3"/> <!-- dead button -->
-      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="4"/> <!-- dead button -->
       <DynamicKey Width="4" Height="4"> <!-- 1 -->
         <Action>BackMany</Action>
 	    <Symbol>BackManyIcon</Symbol>
@@ -45,6 +45,6 @@
         <Symbol>AlarmIcon</Symbol>
         <Action>Attention</Action>
       </DynamicKey>
-      <DynamicKey Width="5" Height="4"/> <!-- dead button -->
+      <DynamicKey BackgroundColor="#010101" Width="5" Height="4"/> <!-- dead button -->
     </Content>
 </Keyboard>

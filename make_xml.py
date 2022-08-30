@@ -26,6 +26,7 @@ def add_deadbutton(content_node, row, col, width, height):
 	key = ET.SubElement(content_node,"DynamicKey")
 
 	# Attributes
+	key.set('BackgroundColor', "#010101")
 	key.set('Row', str(row))
 	key.set('Col', str(col))
 	key.set('Width', str(width))
