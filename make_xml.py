@@ -6,8 +6,11 @@ import xml.dom.minidom as minidom
 import os
 import re
 
+from more_itertools import chunked
+from more_itertools import flatten
+
 def safe_ascii(text):
-	return re.sub(r'[\\/:"*?<>|]+', "", text)
+	return re.sub(r'[\\/\×÷ç:"\'*?<>|␣—]+', "", text)
 
 def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
@@ -17,7 +20,17 @@ def prettify(elem):
 	"""
 	rough_string = ET.tostring(elem, 'utf-8')
 	reparsed = minidom.parseString(rough_string)
-	return reparsed.toprettyxml(indent="\t")
+	return reparsed.toprettyxml(indent="\t").replace("&amp;&amp;","&")
+
+def add_deadbutton(content_node, row, col, width, height):
+	key = ET.SubElement(content_node,"DynamicKey")
+
+	# Attributes
+	key.set('BackgroundColor', "#010101")
+	key.set('Row', str(row))
+	key.set('Col', str(col))
+	key.set('Width', str(width))
+	key.set('Height', str(height))
 
 def add_textkey(content_node, row, col, width, height, text):
 	key = ET.SubElement(content_node,"DynamicKey")
@@ -33,6 +46,8 @@ def add_textkey(content_node, row, col, width, height, text):
 	label_elem.text = text
 	text_elem = ET.SubElement(key, "Text")
 	text_elem.text = text
+	if text == '␣':
+		text_elem.text = '&&#32;'
 	action_elem = ET.SubElement(key, "Action")
 	action_elem.text = "BackFromKeyboard"
 
@@ -95,48 +110,69 @@ def setup_keyboard(name=None,hidden=True):
 
 	return tree, content
 
+def change_util_key(content, pos, label, symbol, action):
+	#  x 1 2 3 4 5 x  |  5 = 6 - 1  |  6 - 5 = 1
+	i = 6 - pos
+	path = "./DynamicKey[last()-{}]/{}"
+	content.find(path.format(i,"Label")).text = label
+	content.find(path.format(i,"Symbol")).text = symbol
+	content.find(path.format(i,"Action")).text = action
+
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
+
+	change_util_key(content, 4, "Voltar", "BackIcon", "BackFromKeyboard")
 
 	# See at the skeleton.xml the initial couple keyboard's lines:
 	# SuggestionRow and Scratchpad related.
 	#
 	# So here we add keys one by one starting on third row...
 
-	curr_row = 2 # use enumerate for less verbose indexing
-	curr_col = 0
-	for char in all_chars:		
-		add_textkey(content, curr_row, curr_col, 1, 2, char)
-		curr_col += 1
-		if curr_col >= total_cols:
-			curr_col = 0
-			curr_row += 2 # the typing lines are Height=2
+	curr_row = 6 # starts after SuggestionRow and Scratchpad lines
 
-	fname = safe_ascii("z__sub-" + all_chars+ ".xml")
+	all_chars = list(chunked(all_chars, 4))
+	for chunk in all_chars:
+		curr_col = 5 # starts after button of no tracking at side
+		add_deadbutton(content, curr_row, 0, 5, 5)
+		for char in chunk:
+			add_textkey(content, curr_row, curr_col, 5, 5, char)
+			curr_col += 5 # each "typing" key is Width=5
+		add_deadbutton(content, curr_row, curr_col, 5, 5)
+		curr_row += 5 # each keyboard's line is Height=5
+
+	all_chars = ''.join(list(flatten(all_chars)))
+	fname = safe_ascii("z__sub-" + all_chars + ".xml")
 	save_file(tree.getroot(), fname)
 	return fname
 
-total_rows = 6
-total_cols = 4
+total_rows = 20 # five keyboard's lines with four rows of grid each
+total_cols = 30 #                 | SuggestionRow
+                # 5 + 4 12  4 + 5 | scratchpad's line
+                # 5 + 5+5+5+5 + 5 | typing line one
+                # 5 + 5+5+5+5 + 5 | typing line two
+                # 5 +  4[x5]  + 5 | utility line
 
 # Content node contains all the keys
 tree, content = setup_keyboard("SL 2.0", False)
 
-keys = ["abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;."]
-
-# TODO special char ␣ will need special consideration
+keys = [
+	"abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.\"",
+	"()-+×÷=~", "01234567", "89ç[\/']", "@$&%<>␣—"
+]
 
 # Add keys to top level one by one
+curr_row = 6 # starts after SuggestionRow and Scratchpad lines
 
-curr_row = 2
-curr_col = 0
-for key in keys:
-	link = make_text_keyboard(key)
-	add_linkkey(content, curr_row, curr_col, 1, 2, key, link)
-	curr_col += 1
-	if curr_col >= total_cols:
-		curr_col = 0
-		curr_row += 2 # the typing lines are Height=2
+keys = list(chunked(keys, 4))
+for chunk in keys:
+	curr_col = 5 # starts after button of no tracking at side
+	add_deadbutton(content, curr_row, 0, 5, 5)
+	for key in chunk:
+		link = make_text_keyboard(key)
+		add_linkkey(content, curr_row, curr_col, 5, 5, key, link)
+		curr_col += 5 # each "typing" key is Width=5
+	add_deadbutton(content, curr_row, curr_col, 5, 5)
+	curr_row += 5 # each keyboard's line is Height=5
 
 # TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
