@@ -110,8 +110,18 @@ def setup_keyboard(name=None,hidden=True):
 
 	return tree, content
 
+def change_util_key(content, pos, label, symbol, action):
+	#  x 1 2 3 4 5 x  |  5 = 6 - 1  |  6 - 5 = 1
+	i = 6 - pos
+	path = "./DynamicKey[last()-{}]/{}"
+	content.find(path.format(i,"Label")).text = label
+	content.find(path.format(i,"Symbol")).text = symbol
+	content.find(path.format(i,"Action")).text = action
+
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
+
+	change_util_key(content, 4, "Voltar", "BackIcon", "BackFromKeyboard")
 
 	# See at the skeleton.xml the initial couple keyboard's lines:
 	# SuggestionRow and Scratchpad related.
