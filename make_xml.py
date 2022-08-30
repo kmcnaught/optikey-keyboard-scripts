@@ -10,7 +10,7 @@ from more_itertools import chunked
 from more_itertools import flatten
 
 def safe_ascii(text):
-	return re.sub(r'[\\/\×÷ç:"\'*?<>|␣]+', "", text)
+	return re.sub(r'[\\/\×÷ç:"\'*?<>|␣—]+', "", text)
 
 def remove_empty_lines(text):
 	return os.linesep.join([s for s in text.splitlines() if s.replace('\n','').replace('\r', '').strip()])
@@ -147,7 +147,7 @@ tree, content = setup_keyboard("SL 2.0", False)
 
 keys = [
 	"abcdefgh", "ijklmnop", "qrstuvwx", "yz?!,;.\"",
-	"()-+×÷=~", "01234567", "89ç[\/']", "@$&%<>␣"
+	"()-+×÷=~", "01234567", "89ç[\/']", "@$&%<>␣—"
 ]
 
 # Add keys to top level one by one
