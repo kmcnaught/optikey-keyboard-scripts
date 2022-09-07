@@ -11,7 +11,7 @@
       <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey Width="4" Height="3">
         <Action>BackOne</Action>
-        <Symbol>BackOneIcon</Symbol>>
+        <Symbol>BackOneIcon</Symbol>
       </DynamicKey>
       <Scratchpad Width="12" Height="3"/>
       <DynamicKey Width="4" Height="3">
