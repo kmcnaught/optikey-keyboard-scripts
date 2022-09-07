@@ -78,7 +78,7 @@ def split_label(text):
 
 def save_file(xml_root, filename):
 	text = prettify(xml_root)
-	with open(filename, "w") as f:
+	with open(filename, "w", encoding="utf-8") as f:
 		for line in text.splitlines():
 			if (line.strip()):
 				f.write(line)
