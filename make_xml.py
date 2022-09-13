@@ -5,9 +5,21 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 import os
 import re
+import yaml
 
 from more_itertools import chunked
 from more_itertools import flatten
+
+def apply_timing(tree):
+	with open('timing.yml','r') as f:
+		data = yaml.load(f, Loader=yaml.SafeLoader)
+		for keyType in data:
+			lockOnTime = str(data[keyType][0])
+			completionTimes = ','.join([str(n) for n in data[keyType][1:]])
+			tags = tree.findall('*[@LockOnTime="{}"]'.format(keyType.upper()))
+			for element in tags:
+				element.set('LockOnTime', lockOnTime)
+				element.set('CompletionTimes', completionTimes)
 
 def safe_ascii(text):
 	return re.sub(r'[\\/\×÷ç:"\'*?<>|␣—]+', "", text)
@@ -42,6 +54,8 @@ def add_textkey(content_node, row, col, width, height, text):
 	key.set('Height', str(height))
 
 	# Elements
+	keygroup_elem = ET.SubElement(key, "KeyGroup")
+	keygroup_elem.text = 'LetterKeys'
 	label_elem = ET.SubElement(key, "Label")
 	label_elem.text = text
 	text_elem = ET.SubElement(key, "Text")
@@ -61,6 +75,8 @@ def add_linkkey(content_node, row, col, width, height, text, link):
 	key.set('Height', str(height))
 
 	# Elements
+	keygroup_elem = ET.SubElement(key, "KeyGroup")
+	keygroup_elem.text = 'GroupKeys'
 	label_elem = ET.SubElement(key, "Label")
 	label_elem.text = split_label(text)
 	link_elem = ET.SubElement(key, "ChangeKeyboard")
@@ -110,18 +126,22 @@ def setup_keyboard(name=None,hidden=True):
 
 	return tree, content
 
-def change_util_key(content, pos, label, symbol, action):
+def change_util_key(content, pos, label, symbol, action, mark):
 	#  x 1 2 3 4 5 x  |  5 = 6 - 1  |  6 - 5 = 1
 	i = 6 - pos
 	path = "./DynamicKey[last()-{}]/{}"
 	content.find(path.format(i,"Label")).text = label
 	content.find(path.format(i,"Symbol")).text = symbol
 	content.find(path.format(i,"Action")).text = action
+	path = "./DynamicKey[last()-{}]"
+	element = content.find(path.format(i))
+	element.set('LockOnTime', mark)
+	element.set('CompletionTimes', mark)
 
 def make_text_keyboard(all_chars):
 	tree, content = setup_keyboard()
 
-	change_util_key(content, 4, "Voltar", "BackIcon", "BackFromKeyboard")
+	change_util_key(content, 4, "Voltar", "BackIcon", "BackFromKeyboard", "BACK")
 
 	# See at the skeleton.xml the initial couple keyboard's lines:
 	# SuggestionRow and Scratchpad related.
@@ -139,6 +159,9 @@ def make_text_keyboard(all_chars):
 			curr_col += 5 # each "typing" key is Width=5
 		add_deadbutton(content, curr_row, curr_col, 5, 5)
 		curr_row += 5 # each keyboard's line is Height=5
+
+	apply_timing(tree)
+	apply_timing(content) # TODO: otimization for this?
 
 	all_chars = ''.join(list(flatten(all_chars)))
 	fname = safe_ascii("z__sub-" + all_chars + ".xml")
@@ -173,6 +196,9 @@ for chunk in keys:
 		curr_col += 5 # each "typing" key is Width=5
 	add_deadbutton(content, curr_row, curr_col, 5, 5)
 	curr_row += 5 # each keyboard's line is Height=5
+
+apply_timing(tree)
+apply_timing(content) # TODO: otimization for this?
 
 # TODO: think about how we keep track of links vs text, text vs actions
 save_file(tree.getroot(), "top.xml")
