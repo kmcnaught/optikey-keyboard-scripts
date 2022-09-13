@@ -4,43 +4,45 @@
     <Grid>
       <!-- TO GENERATE -->
     </Grid>
+    <KeyGroup Name="GroupKeys" LockOnTime="GROUPKEYS" CompletionTimes="GROUPKEYS"/>
+    <KeyGroup Name="LetterKeys" LockOnTime="LETTERKEYS" CompletionTimes="LETTERKEYS"/>
     <Content>
       <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
-      <SuggestionRow Width="20" Height="3"/>
+      <SuggestionRow Width="20" Height="3" LockOnTime="PREDICTION" CompletionTimes="PREDICTION"/>
       <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
-      <DynamicKey Width="4" Height="3">
+      <DynamicKey Width="4" Height="3" LockOnTime="BACKONE" CompletionTimes="BACKONE">
         <Action>BackOne</Action>
-        <Symbol>BackOneIcon</Symbol>>
+        <Symbol>BackOneIcon</Symbol>
       </DynamicKey>
       <Scratchpad Width="12" Height="3"/>
-      <DynamicKey Width="4" Height="3">
+      <DynamicKey Width="4" Height="3" LockOnTime="SPEAK" CompletionTimes="SPEAK">
         <Label>Falar</Label>
         <Action>Speak</Action>
         <Symbol>SpeakIcon</Symbol>
       </DynamicKey>
       <DynamicKey BackgroundColor="#010101" Width="5" Height="3"/> <!-- dead button -->
       <DynamicKey BackgroundColor="#010101" Width="5" Height="4"/> <!-- dead button -->
-      <DynamicKey Width="4" Height="4"> <!-- 1 -->
+      <DynamicKey Width="4" Height="4" LockOnTime="BACKMANY" CompletionTimes="BACKMANY"> <!-- 1 -->
         <Action>BackMany</Action>
 	    <Symbol>BackManyIcon</Symbol>
       </DynamicKey>
-      <DynamicKey Width="4" Height="4"> <!-- 2 -->
+      <DynamicKey Width="4" Height="4" LockOnTime="CLEAR" CompletionTimes="CLEAR"> <!-- 2 -->
 	    <Label>Limpar</Label>
         <Symbol>ClearIcon</Symbol>
         <Action>ClearScratchpad</Action>
       </DynamicKey>
-      <DynamicKey Width="4" Height="4"> <!-- 3 -->
+      <DynamicKey Width="4" Height="4" LockOnTime="CALIBRATE" CompletionTimes="CALIBRATE"> <!-- 3 -->
         <Label>Calibrar</Label>
         <Symbol>CalibrateIcon</Symbol>
         <Action>Calibrate</Action>
       </DynamicKey>
-      <DynamicKey Width="4" Height="4"> <!-- 4 -->
+      <DynamicKey Width="4" Height="4" LockOnTime="SLEEP" CompletionTimes="SLEEP"> <!-- 4 -->
         <Label>Dormir</Label>
         <Symbol>SleepIcon</Symbol>
         <Action>Sleep</Action>
       </DynamicKey>
-      <DynamicKey Width="4" Height="4"> <!-- 5 -->
+      <DynamicKey Width="4" Height="4" LockOnTime="ALARM" CompletionTimes="ALARM"> <!-- 5 -->
         <Label>Atenção!</Label>
         <Symbol>AlarmIcon</Symbol>
         <Action>Attention</Action>
